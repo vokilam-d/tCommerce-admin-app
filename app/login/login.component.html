@@ -1,15 +1,15 @@
-
 <ScrollView orientation="horizontal">
     <FlexboxLayout class="container">
         <StackLayout class="form">
-            <TextField class="input input-border"
+            <TextField class="input"
                        [(ngModel)]="login"
                        hint="Логин"
                        autocorrect="false"
                        autocapitalizationType="none"
             ></TextField>
 
-            <TextField class="input input-border"
+
+            <TextField class="input"
                        [(ngModel)]="password"
                        hint="Пароль"
                        autocorrect="false"
@@ -17,10 +17,18 @@
                        secure="true"
             ></TextField>
 
-            <TextView class="error" *ngIf="error" [text]="error" editable="false">
-            </TextView>
+            <ActivityIndicator *ngIf="isLoading"
+                               [busy]="isLoading"
+                               row="1"
+                               horizontalAlignment="center"
+                               verticalAlignment="center"
+            ></ActivityIndicator>
+
+            <TextView class="error" *ngIf="error" [text]="error" editable="false"></TextView>
 
             <Button class="btn" [text]="'Войти'" (tap)="signIn()"></Button>
         </StackLayout>
+
     </FlexboxLayout>
+
 </ScrollView>

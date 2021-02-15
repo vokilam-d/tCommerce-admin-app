@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
     this.authService.getCurrentUser().subscribe(
       response => {
         if (response.data) {
-          this.router.navigate(['/', 'login'], { clearHistory: true });
+          this.router.navigate(['/', 'order-photo'], { clearHistory: true });
         } else {
           this.router.navigate(['/', 'login'], { clearHistory: true });
         }

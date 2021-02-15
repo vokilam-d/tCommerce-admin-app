@@ -3,6 +3,7 @@ import { AuthService } from '~/services/auth.service';
 import { getString, setString } from 'tns-core-modules/application-settings';
 import { DEFAULT_ERROR_TEXT } from '~/constants';
 import { RouterExtensions } from '@nativescript/angular';
+import { finalize } from 'rxjs/internal/operators';
 
 @Component({
   selector: 'Login',
@@ -15,6 +16,7 @@ export class LoginComponent implements OnInit {
   error: string = null;
   login: string = '';
   password: string = '';
+  isLoading: boolean = false;
 
   private lastSuccessfulLoginKey = 'last-login';
 
@@ -32,16 +34,19 @@ export class LoginComponent implements OnInit {
 
   signIn() {
     this.error = null;
-    this.authService.login(this.login, this.password).subscribe(
-      response => {
-        this.authService.user = response.data;
-        setString(this.lastSuccessfulLoginKey, this.login);
+    this.isLoading = true;
+    this.authService.login(this.login, this.password)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(
+        response => {
+          this.authService.user = response.data;
+          setString(this.lastSuccessfulLoginKey, this.login);
 
-        this.router.navigate(['/', 'order-photo'], { clearHistory: true });
-      },
-      error => {
-        this.error = (error.error && error.error.message) || JSON.stringify(error.error || error) || DEFAULT_ERROR_TEXT;
-      }
-    );
+          this.router.navigate(['/', 'order-photo'], { clearHistory: true });
+        },
+        error => {
+          this.error = (error.error && error.error.message) || JSON.stringify(error.error || error) || DEFAULT_ERROR_TEXT;
+        }
+      );
   }
 }
