@@ -1,0 +1,12 @@
+<ActionBar [title]="'Фото заказа №' + orderNumber">
+</ActionBar>
+
+<ScrollView orientation="horizontal">
+
+    <ActivityIndicator *ngIf="isLoading"
+                       [busy]="isLoading"
+                       row="1"
+                       horizontalAlignment="center"
+                       verticalAlignment="center"
+    ></ActivityIndicator>
+</ScrollView>

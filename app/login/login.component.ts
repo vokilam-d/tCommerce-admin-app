@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
           this.authService.user = response.data;
           setString(this.lastSuccessfulLoginKey, this.login);
 
-          this.router.navigate(['/', 'order-photo'], { clearHistory: true });
+          this.router.navigate(['/', 'orders'], { clearHistory: true });
         },
         error => {
           this.error = (error.error && error.error.message) || JSON.stringify(error.error || error) || DEFAULT_ERROR_TEXT;

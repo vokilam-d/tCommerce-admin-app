@@ -8,10 +8,10 @@ import { finalize } from 'rxjs/internal/operators';
 @Component({
   selector: 'OrderPhoto',
   moduleId: module.id,
-  templateUrl: './order-photo.component.html',
-  styleUrls: ['./order-photo.component.css']
+  templateUrl: './orders.component.html',
+  styleUrls: ['./orders.component.css']
 })
-export class OrderPhotoComponent implements OnInit {
+export class OrdersComponent implements OnInit {
 
   error: string = null;
   orderNumber: number;
@@ -33,6 +33,8 @@ export class OrderPhotoComponent implements OnInit {
   submit(): void {
     const orderNumber = Number(this.orderNumber);
     setNumber(this.lastOrderNumberKey, orderNumber);
+
+    this.router.navigate(['/', 'orders', orderNumber, 'upload']);
   }
 
   logout(): void {
