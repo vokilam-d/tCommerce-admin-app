@@ -1,0 +1,29 @@
+.container {
+    justify-content: center;
+    align-items: center;
+    background-image: url("~/images/logo.png");
+    background-repeat: no-repeat;
+    background-position: 50% 20%;
+    background-size: 100 100;
+}
+
+.form {
+    width: 300;
+    padding: 20 16;
+    background-color: #f0f0f0;
+}
+
+.input {
+    color: #313131;
+    font-size: 16;
+}
+
+.btn {
+    background: #eb5202;
+    color: #fff;
+}
+
+.error {
+    color: red;
+    font-size: 16;
+}

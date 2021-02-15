@@ -1,0 +1,26 @@
+
+<ScrollView orientation="horizontal">
+    <FlexboxLayout class="container">
+        <StackLayout class="form">
+            <TextField class="input input-border"
+                       [(ngModel)]="login"
+                       hint="Логин"
+                       autocorrect="false"
+                       autocapitalizationType="none"
+            ></TextField>
+
+            <TextField class="input input-border"
+                       [(ngModel)]="password"
+                       hint="Пароль"
+                       autocorrect="false"
+                       autocapitalizationType="none"
+                       secure="true"
+            ></TextField>
+
+            <TextView class="error" *ngIf="error" [text]="error" editable="false">
+            </TextView>
+
+            <Button class="btn" [text]="'Войти'" (tap)="signIn()"></Button>
+        </StackLayout>
+    </FlexboxLayout>
+</ScrollView>

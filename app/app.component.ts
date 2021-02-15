@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '~/services/auth.service';
+import { RouterExtensions } from '@nativescript/angular';
 
 @Component({
   selector: 'ns-app',
@@ -7,22 +8,23 @@ import { AuthService } from '~/services/auth.service';
 })
 export class AppComponent implements OnInit {
 
-  text: string = '';
-  constructor(private authService: AuthService) {
-  }
+  constructor(
+    private authService: AuthService,
+    private router: RouterExtensions
+  ) { }
 
   ngOnInit() {
-    console.log('init');
-    this.authService.getUser().subscribe(
+    this.authService.getCurrentUser().subscribe(
       response => {
-        console.log('response')
-        console.log(response);
-        this.text = JSON.stringify(response);
+        if (response.data) {
+          this.router.navigate(['/', 'login'], { clearHistory: true });
+        } else {
+          this.router.navigate(['/', 'login'], { clearHistory: true });
+        }
       },
-      error => {
-        console.log('error');
-        console.log(error);
+      _ => {
+        this.router.navigate(['/', 'login'], { clearHistory: true });
       }
-    )
+    );
   }
 }
