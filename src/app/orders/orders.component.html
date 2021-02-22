@@ -1,0 +1,31 @@
+<ActionBar title="Заказы"></ActionBar>
+
+<ScrollView orientation="horizontal">
+    <FlexboxLayout flexWrap="wrap" flexDirection="column" width="90%">
+        <FlexboxLayout class="container" flexGrow="1">
+            <StackLayout class="form">
+                <Label class="label" text="Введите номер заказа"></Label>
+                <TextField class="input"
+                           hint="10123"
+                           keyboardType="number"
+                           [(ngModel)]="orderId"
+                ></TextField>
+
+                <Button class="btn" [text]="'Подтвердить'" (tap)="submit()"></Button>
+            </StackLayout>
+
+        </FlexboxLayout>
+
+
+        <ActivityIndicator *ngIf="isLoading"
+                           [busy]="isLoading"
+                           row="1"
+                           horizontalAlignment="center"
+                           verticalAlignment="center"
+        ></ActivityIndicator>
+
+        <TextView class="error" *ngIf="error" [text]="error" editable="false"></TextView>
+
+        <Button class="logout-btn" dock="bottom" [text]="'Выйти из аккаунта'" (tap)="logout()"></Button>
+    </FlexboxLayout>
+</ScrollView>

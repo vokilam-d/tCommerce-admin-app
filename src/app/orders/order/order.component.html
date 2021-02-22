@@ -1,0 +1,16 @@
+<ActionBar [title]="'Заказ №' + orderId"></ActionBar>
+
+<ScrollView orientation="horizontal">
+    <StackLayout>
+        <ActivityIndicator *ngIf="isLoading"
+                           [busy]="isLoading"
+                           row="1"
+                           horizontalAlignment="center"
+                           verticalAlignment="center"
+        ></ActivityIndicator>
+
+        <TextView class="error" *ngIf="error" [text]="error" editable="false"></TextView>
+
+        <Button (tap)="upload()" text="Добавить фото"></Button>
+    </StackLayout>
+</ScrollView>
