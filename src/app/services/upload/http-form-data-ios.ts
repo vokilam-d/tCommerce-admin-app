@@ -54,13 +54,14 @@ export class TNSHttpFormDataAndroid extends Observable {
               body = response.body().string();
             }
 
-            let customResponse: TNSHttpFormDataResponse = {
-              headers: response.headers().toString(),
-              statusCode: response.code(),
-              statusMessage: response.message(),
-              body: body
-            };
-            resolve(customResponse);
+            // let customResponse: TNSHttpFormDataResponse = {
+            //   headers: response.headers().toString(),
+            //   statusCode: response.code(),
+            //   statusMessage: response.message(),
+            //   body: body
+            // };
+            // resolve(customResponse);
+            response(body);
           },
           // incase of timeout etc, this will be called
           onFailure: (call, response) => {

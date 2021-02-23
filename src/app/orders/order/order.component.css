@@ -1,4 +1,11 @@
-.error {
-    color: red;
-    font-size: 16;
+.order__media {
+    width: 90;
+    height: 90;
+    border-radius: 3;
+    border-color: #bbb;
+    border-width: 1;
+}
+
+.order__media--add {
+    padding: 10;
 }

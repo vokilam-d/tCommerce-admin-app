@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { RouterExtensions } from '@nativescript/angular';
 import { finalize } from 'rxjs/internal/operators';
 import { ActivatedRoute } from '@angular/router';
-import { API_HOST, DEFAULT_ERROR_TEXT } from '../../shared/constants';
+import { DEFAULT_ERROR_TEXT, DEFAULT_LANG, UPLOADED_HOST } from '../../shared/constants';
 import { OrderDto } from '../../shared/dtos/order.dto';
 import { OrderService } from '../../services/order.service';
 import * as imagepicker from '@nativescript/imagepicker';
-import { UploadService } from '../../services/upload/upload.service';
-import { Toasty } from '@triniwiz/nativescript-toasty'
+import { ToastService } from '../../services/toast.service';
+import { MediaDto } from '../../shared/dtos/media.dto';
 
 
 @Component({
@@ -17,16 +17,18 @@ import { Toasty } from '@triniwiz/nativescript-toasty'
 })
 export class OrderComponent implements OnInit {
 
-  error: string = null;
   isLoading: boolean = false;
+  isUploading: boolean = false;
   orderId: number;
   order: OrderDto;
+  lang = DEFAULT_LANG;
 
   constructor(
     private router: RouterExtensions,
     private route: ActivatedRoute,
     private orderService: OrderService,
-    private uploadService: UploadService
+    private toastService: ToastService,
+    private zone: NgZone
   ) { }
 
   ngOnInit(): void {
@@ -35,13 +37,23 @@ export class OrderComponent implements OnInit {
   }
 
   async upload(): Promise<void> {
-    let context = imagepicker.create({ mode: 'single' });
+    const context = imagepicker.create({ mode: 'single' });
     await context.authorize();
     const selection = await context.present();
     selection[0].getImageAsync(async imageSource => {
-      const response = await this.uploadService.upload(`${API_HOST}/api/v1/admin/orders/10001/media`, imageSource);
-      const toast = new Toasty({ text: 'Фото успешно загружено' });
-      toast.show();
+      this.zone.run(() => this.isUploading = true);
+
+      try {
+        const response = await this.orderService.uploadOrderPhoto(this.orderId, imageSource);
+        this.zone.run(() => this.order.medias = response.data.medias);
+        this.toastService.showMessage('Фото успешно загружено');
+      } catch (error) {
+        console.log(error);
+        const errMessage = error.message || error.error?.message || error.error || error || DEFAULT_ERROR_TEXT;
+        this.toastService.showError(errMessage);
+      }
+
+      this.zone.run(() => this.isUploading = false);
     });
 
     // camera.requestPermissions()
@@ -53,22 +65,25 @@ export class OrderComponent implements OnInit {
     //   });
   }
 
+  getMediaUrl(media: MediaDto): string {
+    return UPLOADED_HOST + media.variantsUrls.original;
+  }
+
+  getItemUrl(url: string): string {
+    return UPLOADED_HOST + url;
+  }
+
   private fetchOrder() {
     this.isLoading = true;
-    this.error = null;
     this.orderService.fetchOrder(this.orderId)
-      .pipe(finalize(() => {
-        console.log('final');
-        this.isLoading = false
-      }))
+      .pipe(finalize(() => this.isLoading = false))
       .subscribe(
         response => {
-          console.log(response);
           this.order = response.data;
         },
         error => {
-          console.log(error);
-          this.error = (error.error && error.error.message) || JSON.stringify(error.error || error) || DEFAULT_ERROR_TEXT
+          const errMessage = error.message || error.error?.message || error.error || error || DEFAULT_ERROR_TEXT;
+          this.toastService.showError(errMessage);
         }
       );
   }

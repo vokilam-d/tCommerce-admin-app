@@ -14,25 +14,25 @@ export class UploadService {
   constructor() {
   }
 
-  upload(url: string, image: any): Promise<any> {
+  upload(url: string, image: any, filename: string | number): Promise<any> {
 
     if (Application.ios) {
-      return this.uploadIos(url, image);
+      return this.uploadIos(url, image, filename);
     } else {
-      return this.uploadAndroid(url, image);
+      return this.uploadAndroid(url, image, filename);
     }
   }
 
-  private uploadIos(url: string, image: any) {
+  private uploadIos(url: string, image: any, filename: string | number) {
     let params = [];
     //@ts-ignore
     const imageData = UIImageJPEGRepresentation(image, 80);
-    params.push(this.buildParam(imageData));
+    params.push(this.buildParam(imageData, filename));
 
     return this.formDataIos.post(url, params);
   }
 
-  private uploadAndroid(url: string, image: any) {
+  private uploadAndroid(url: string, image: any, filename: string | number) {
     let params = [];
 
     //can be one of these overloads https://square.github.io/okhttp/3.x/okhttp/okhttp3/RequestBody.html
@@ -45,17 +45,17 @@ export class UploadService {
     let byteArray = stream.toByteArray();
     bitmapImage.recycle();
 
-    params.push(this.buildParam(byteArray));
+    params.push(this.buildParam(byteArray, filename));
 
     return this.formDataAndroid.post(url, params);
   }
 
-  private buildParam(imageData: any): TNSHttpFormDataParam {
+  private buildParam(imageData: any, filename: string | number): TNSHttpFormDataParam {
     return {
       data: imageData,
       contentType: 'image/jpeg',
       parameterName: 'file',
-      fileName: 'upload.jpeg'
+      fileName: `${filename}.jpeg`
     };
   }
 

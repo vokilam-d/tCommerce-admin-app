@@ -47,13 +47,14 @@ export class TNSHttpFormDataIos extends Observable {
             desc = temp.description;
           }
 
-          let customResponse: TNSHttpFormDataResponse = {
-            headers: response.allHeaderFields,
-            statusCode: response.statusCode,
-            statusMessage: NSHTTPURLResponse.localizedStringForStatusCode(response.statusCode),
-            body: desc
-          };
-          resolve(customResponse);
+          // let customResponse: TNSHttpFormDataResponse = {
+          //   headers: response.allHeaderFields,
+          //   statusCode: response.statusCode,
+          //   statusMessage: NSHTTPURLResponse.localizedStringForStatusCode(response.statusCode),
+          //   body: desc
+          // };
+          // resolve(customResponse);
+          resolve(desc);
         });
     });
   }

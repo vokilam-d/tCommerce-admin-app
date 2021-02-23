@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { API_HOST } from '../shared/constants';
 import { ResponseDto } from '../shared/dtos/response.dto';
 import { OrderDto } from '../shared/dtos/order.dto';
+import { UploadService } from './upload/upload.service';
 
 
 @Injectable({
@@ -12,30 +13,15 @@ import { OrderDto } from '../shared/dtos/order.dto';
 export class OrderService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private uploadService: UploadService
   ) { }
 
   fetchOrder(orderId: number): Observable<ResponseDto<OrderDto>> {
     return this.http.get<ResponseDto<OrderDto>>(`${API_HOST}/api/v1/admin/orders/${orderId}`);
   }
 
-  // uploadOrderPhoto(orderId: number, file: any): Observable<ResponseDto<OrderDto>> {
-  async uploadOrderPhoto(orderId: number, file: any) {
-    file.getImageAsync(async (image, error) => {
-      const payload = new FormData();
-      console.log({ image, imageName: image.name })
-      payload.append('file', image, image.name);
-
-      fetch(`${API_HOST}/api/v1/admin/orders/${orderId}/media`, {
-        method: 'POST',
-        body: payload
-      }).then((r) => r.json())
-
-        .then((response) => {
-          console.log({ response });
-        }).catch((e) => {
-        console.log({ e });
-      });
-    });
+  async uploadOrderPhoto(orderId: number, imageSource: any): Promise<ResponseDto<OrderDto>> {
+    return this.uploadService.upload(`${API_HOST}/api/v1/admin/orders/${orderId}/media`, imageSource, orderId);
   }
 }

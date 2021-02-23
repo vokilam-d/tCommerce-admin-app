@@ -33,7 +33,7 @@ export class OrdersComponent implements OnInit {
     const orderId = Number(this.orderId);
     ApplicationSettings.setNumber(this.lastOrderIdKey, orderId);
 
-    this.router.navigate(['/', 'orders', orderId]);
+    this.router.navigate(['/', 'orders', orderId], { clearHistory: false });
   }
 
   logout(): void {
