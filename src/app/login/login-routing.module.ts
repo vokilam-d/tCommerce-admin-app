@@ -4,7 +4,7 @@ import { LoginComponent } from './login.component';
 import { NativeScriptRouterModule } from '@nativescript/angular';
 
 const routes: Routes = [
-  { path: "", component: LoginComponent }
+  { path: '', component: LoginComponent }
 ];
 
 @NgModule({

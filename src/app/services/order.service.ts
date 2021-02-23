@@ -23,18 +23,18 @@ export class OrderService {
   async uploadOrderPhoto(orderId: number, file: any) {
     file.getImageAsync(async (image, error) => {
       const payload = new FormData();
-      console.log({image, imageName: image.name})
+      console.log({ image, imageName: image.name })
       payload.append('file', image, image.name);
 
       fetch(`${API_HOST}/api/v1/admin/orders/${orderId}/media`, {
-        method: "POST",
+        method: 'POST',
         body: payload
       }).then((r) => r.json())
 
         .then((response) => {
           console.log({ response });
         }).catch((e) => {
-        console.log({e});
+        console.log({ e });
       });
     });
   }

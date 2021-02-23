@@ -6,13 +6,12 @@ import { API_HOST, DEFAULT_ERROR_TEXT } from '../../shared/constants';
 import { OrderDto } from '../../shared/dtos/order.dto';
 import { OrderService } from '../../services/order.service';
 import * as imagepicker from '@nativescript/imagepicker';
-import { ImageSource } from '@nativescript/core';
 import { UploadService } from '../../services/upload/upload.service';
+import { Toasty } from '@triniwiz/nativescript-toasty'
 
 
 @Component({
   selector: 'Order',
-  moduleId: module.id,
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.css']
 })
@@ -31,22 +30,19 @@ export class OrderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('init')
     this.orderId = Number(this.route.snapshot.paramMap.get('id'));
     this.fetchOrder();
   }
 
   async upload(): Promise<void> {
-      let context = imagepicker.create({ mode: 'single' });
-      await context.authorize();
-      const selection = await context.present();
-      selection[0].getImageAsync(async imageSource => {
-          const response = await this.uploadService.upload(`${API_HOST}/api/v1/admin/orders/10001/media`, imageSource);
-      console.log('resp');
-          console.log(response);
-      console.log(Object.keys(response.data || response));
-
-      })
+    let context = imagepicker.create({ mode: 'single' });
+    await context.authorize();
+    const selection = await context.present();
+    selection[0].getImageAsync(async imageSource => {
+      const response = await this.uploadService.upload(`${API_HOST}/api/v1/admin/orders/10001/media`, imageSource);
+      const toast = new Toasty({ text: 'Фото успешно загружено' });
+      toast.show();
+    });
 
     // camera.requestPermissions()
     //   .then(() => camera.takePicture())
