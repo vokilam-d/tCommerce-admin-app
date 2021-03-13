@@ -6,8 +6,10 @@ import { DEFAULT_ERROR_TEXT, DEFAULT_LANG, UPLOADED_HOST } from '../../shared/co
 import { OrderDto } from '../../shared/dtos/order.dto';
 import { OrderService } from '../../services/order.service';
 import * as imagepicker from '@nativescript/imagepicker';
+import * as camera from '@nativescript/camera';
 import { ToastService } from '../../services/toast.service';
 import { MediaDto } from '../../shared/dtos/media.dto';
+import { Dialogs, ImageAsset, ImageSource } from '@nativescript/core';
 
 
 @Component({
@@ -37,31 +39,23 @@ export class OrderComponent implements OnInit {
   }
 
   async upload(): Promise<void> {
-    const context = imagepicker.create({ mode: 'single' });
-    await context.authorize();
-    const selection = await context.present();
-    selection[0].getImageAsync(async imageSource => {
-      this.zone.run(() => this.isUploading = true);
+    const cameraAction = 'Камера';
+    const galleryAction = 'Галерея';
 
-      try {
-        const response = await this.orderService.uploadOrderPhoto(this.orderId, imageSource);
-        this.zone.run(() => this.order.medias = response.data.medias);
-        this.toastService.showMessage('Фото успешно загружено');
-      } catch (error) {
-        const errMessage = error.message || error.error?.message || error.error || error || DEFAULT_ERROR_TEXT;
-        this.toastService.showError(errMessage);
+    Dialogs.action({
+      message: "Выберите способ загрузки",
+      cancelButtonText: "Отменить",
+      actions: [cameraAction, galleryAction]
+    }).then(result => {
+      switch (result) {
+        case cameraAction:
+          this.uploadFromCamera();
+          break;
+        case galleryAction:
+          this.uploadFromGallery();
+          break;
       }
-
-      this.zone.run(() => this.isUploading = false);
     });
-
-    // camera.requestPermissions()
-    //   .then(() => camera.takePicture())
-    //   camera.takePicture()
-    //   .then(photo => {
-    //     console.log(photo);
-    //     this.orderService.uploadOrderPhoto(this.orderId, photo).subscribe(console.log, console.log);
-    //   });
   }
 
   getMediaUrl(media: MediaDto): string {
@@ -85,5 +79,61 @@ export class OrderComponent implements OnInit {
           this.toastService.showError(errMessage);
         }
       );
+  }
+
+  private async uploadFromCamera() {
+    try {
+      await camera.requestPermissions();
+    } catch (e) {
+      this.toastService.showError(`Необходимо дать доступ к камере для загрузки фото`);
+      return;
+    }
+
+    let imageAsset: ImageAsset;
+    try {
+      imageAsset = await camera.takePicture();
+    } catch (e) {
+      this.toastService.showError(`Не удалось сделать фото`);
+      return;
+    }
+
+    this.uploadImageAsset(imageAsset);
+  }
+
+  private async uploadFromGallery() {
+    const context = imagepicker.create({ mode: 'single' });
+    try {
+      await context.authorize();
+    } catch (e) {
+      this.toastService.showError(`Необходимо дать доступ к галерее для загрузки фото`);
+      return;
+    }
+
+    const selection = await context.present();
+    if (!selection[0]) { return; }
+
+    this.uploadImageAsset(selection[0]);
+  }
+
+  private uploadImageAsset(imageAsset: ImageAsset) {
+    imageAsset.getImageAsync(async (imageSource, err) => {
+      if (err) {
+        this.toastService.showError(err);
+        return;
+      }
+
+      this.zone.run(() => this.isUploading = true);
+
+      try {
+        const response = await this.orderService.uploadOrderPhoto(this.orderId, imageSource);
+        this.zone.run(() => this.order.medias = response.data.medias);
+        this.toastService.showMessage('Фото успешно загружено');
+      } catch (error) {
+        const errMessage = error.message || error.error?.message || error.error || error || DEFAULT_ERROR_TEXT;
+        this.toastService.showError(errMessage);
+      }
+
+      this.zone.run(() => this.isUploading = false);
+    });
   }
 }

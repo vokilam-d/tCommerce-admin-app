@@ -32,8 +32,8 @@
             </FlexboxLayout>
 
             <StackLayout class="m-t-10 m-l-10 m-r-10">
-                <Label class="t-16" [text]="'Покупатель: ' + order.shipment.recipient.firstName + ' ' + order.shipment.recipient.lastName + ', ' + order.shipment.recipient.phone" textWrap="true"></Label>
-                <Label class="t-16" [text]="'Адрес: ' + order.shipment.recipient.settlementFull || order.shipment.recipient.settlement + ', ' + order.shipment.recipient.addressFull || order.shipment.recipient.address" textWrap="true"></Label>
+                <Label class="t-16" [text]="order.shipment.recipient.firstName + ' ' + order.shipment.recipient.lastName + ', ' + order.shipment.recipient.phone" textWrap="true"></Label>
+                <Label class="t-16" [text]="order.shipment.recipient.settlementFull || order.shipment.recipient.settlement + ', ' + order.shipment.recipient.addressFull || order.shipment.recipient.address" textWrap="true"></Label>
             </StackLayout>
 
             <Label class="m-t-10 m-l-10 m-r-10 t-20" text="Товары в заказе"></Label>

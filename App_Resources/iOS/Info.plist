@@ -45,5 +45,9 @@
 	</array>
 	<key>UIUserInterfaceStyle</key>
     <string>Light</string>
+    <key>NSCameraUsageDescription</key>
+    <string>We need access to camera for possibility to upload photos to the order</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to photo library for possibility to upload photos to the order</string>
 </dict>
 </plist>
