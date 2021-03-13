@@ -6,7 +6,9 @@ import {
   TNSHttpFormDataResponse
 } from 'nativescript-http-formdata';
 
-export class TNSHttpFormDataIos extends Observable {
+declare const okhttp3: any;
+
+export class TNSHttpFormDataAndroid extends Observable {
   constructor() {
     super();
   }
@@ -14,48 +16,60 @@ export class TNSHttpFormDataIos extends Observable {
   post(url: string, params: Array<TNSHttpFormDataParam>, options?: TNSHttpFormDataRequestOptions)
     : Promise<TNSHttpFormDataResponse> {
     return new Promise((resolve, reject) => {
-      let multipartFormData = OMGMultipartFormData.new();
-      for (let param of params) {
-        if (param.fileName && param.contentType) {
-          multipartFormData.addFileParameterNameFilenameContentType(
-            param.data, param.parameterName, param.fileName, param.contentType);
-        } else {
-          multipartFormData.addTextParameterName(param.data, param.parameterName);
-        }
-      }
+      try {
+        let client = new okhttp3.OkHttpClient();
+        let builder = new okhttp3.MultipartBody.Builder();
 
-      let request: NSMutableURLRequest = OMGHTTPURLRQ.POSTError(url, multipartFormData);
-      if (options && options.headers) {
-        for (let k in options.headers) {
-          // https://stackoverflow.com/a/4265260
-          request.addValueForHTTPHeaderField(options.headers[k], k);
-        }
-        // Log the output to make sure our new headers are there
-        console.log(request.allHTTPHeaderFields);
-      }
-      NSURLConnection.sendAsynchronousRequestQueueCompletionHandler(
-        request, NSOperationQueue.currentQueue, (response: NSHTTPURLResponse, data: NSData, error: NSError) => {
-          if (error) {
-            reject(error);
-            return;
-          }
-          let desc;
-          const temp = NSString.alloc().initWithDataEncoding(data, NSASCIIStringEncoding);
-          try {
-            desc = JSON.parse(temp.description);
-          } catch (e) {
-            desc = temp.description;
-          }
+        // builder.setType(okhttp3.MultipartBody.FORM);
+        const FORM_MEDIA_TYPE = okhttp3.MediaType.parse('multipart/form-data');
+        builder.setType(FORM_MEDIA_TYPE);
 
-          // let customResponse: TNSHttpFormDataResponse = {
-          //   headers: response.allHeaderFields,
-          //   statusCode: response.statusCode,
-          //   statusMessage: NSHTTPURLResponse.localizedStringForStatusCode(response.statusCode),
-          //   body: desc
-          // };
-          // resolve(customResponse);
-          resolve(desc);
+        for (let param of params) {
+          if (param.fileName && param.contentType) {
+            const MEDIA_TYPE = okhttp3.MediaType.parse(param.contentType);
+            builder.addFormDataPart(param.parameterName, param.fileName, okhttp3.RequestBody.create(MEDIA_TYPE, param.data));
+          } else {
+            builder.addFormDataPart(param.parameterName, param.data);
+          }
+        }
+        let requestBody = builder.build();
+        let reqWithURL = new okhttp3.Request.Builder()
+          .url(url);
+
+        if (options && options.headers) {
+          for (let k in options.headers) {
+            reqWithURL.addHeader(k, options.headers[k]);
+          }
+        }
+        const request = reqWithURL
+          .post(requestBody)
+          .build();
+        let callback = new okhttp3.Callback({
+          // all server errors will arrive here
+          onResponse: (call, response) => {
+            let body;
+            try {
+              body = JSON.parse(response.body().string());
+            } catch (e) {
+              body = response.body().string();
+            }
+
+            if (typeof body.statusCode === 'number' && body.statusCode >= 300) {
+              reject(body);
+            } else {
+              resolve(body);
+            }
+          },
+          // incase of timeout etc, this will be called
+          onFailure: (call, response) => {
+            reject(response);
+          }
         });
+
+        client.newCall(request).enqueue(callback);
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 }

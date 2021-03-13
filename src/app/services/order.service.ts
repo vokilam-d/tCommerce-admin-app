@@ -5,6 +5,7 @@ import { API_HOST } from '../shared/constants';
 import { ResponseDto } from '../shared/dtos/response.dto';
 import { OrderDto } from '../shared/dtos/order.dto';
 import { UploadService } from './upload/upload.service';
+import { AuthService } from './auth.service';
 
 
 @Injectable({
@@ -14,7 +15,8 @@ export class OrderService {
 
   constructor(
     private http: HttpClient,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private authService: AuthService
   ) { }
 
   fetchOrder(orderId: number): Observable<ResponseDto<OrderDto>> {
@@ -22,6 +24,7 @@ export class OrderService {
   }
 
   async uploadOrderPhoto(orderId: number, imageSource: any): Promise<ResponseDto<OrderDto>> {
-    return this.uploadService.upload(`${API_HOST}/api/v1/admin/orders/${orderId}/media`, imageSource, orderId);
+    const url = `${API_HOST}/api/v1/admin/order-media/${orderId}?login=${this.authService.user.login}`;
+    return this.uploadService.upload(url, imageSource, orderId);
   }
 }

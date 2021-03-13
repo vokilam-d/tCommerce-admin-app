@@ -5,6 +5,7 @@ import { API_HOST } from '../shared/constants';
 import { ResponseDto } from '../shared/dtos/response.dto';
 import { UserDto } from '../shared/dtos/user.dto';
 import { LoginDto } from '../shared/dtos/login.dto';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class AuthService {
   ) { }
 
   getCurrentUser(): Observable<ResponseDto<UserDto>> {
-    return this.http.get<ResponseDto<UserDto>>(`${API_HOST}/api/v1/admin/user`);
+    return this.http.get<ResponseDto<UserDto>>(`${API_HOST}/api/v1/admin/user`)
+      .pipe(tap(response => this.user = response.data));
   }
 
   login(login: string, password: string): Observable<ResponseDto<UserDto>> {
@@ -26,10 +28,12 @@ export class AuthService {
       password
     };
 
-    return this.http.post<ResponseDto<UserDto>>(`${API_HOST}/api/v1/admin/user/login`, dto);
+    return this.http.post<ResponseDto<UserDto>>(`${API_HOST}/api/v1/admin/user/login`, dto)
+      .pipe(tap(response => this.user = response.data));
   }
 
   logout() {
-    return this.http.post(`${API_HOST}/api/v1/admin/user/logout`, {});
+    return this.http.post(`${API_HOST}/api/v1/admin/user/logout`, {})
+      .pipe(tap(_ => this.user = null));
   }
 }

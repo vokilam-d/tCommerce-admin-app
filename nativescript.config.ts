@@ -1,7 +1,7 @@
 import { NativeScriptConfig } from '@nativescript/core';
 
 export default {
-  id: 'org.nativescript.tnsnew',
+  id: 'org.klondike.admin',
   appPath: 'src',
   appResourcesPath: 'App_Resources',
   android: {

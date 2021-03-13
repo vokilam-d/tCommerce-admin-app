@@ -48,7 +48,6 @@ export class OrderComponent implements OnInit {
         this.zone.run(() => this.order.medias = response.data.medias);
         this.toastService.showMessage('Фото успешно загружено');
       } catch (error) {
-        console.log(error);
         const errMessage = error.message || error.error?.message || error.error || error || DEFAULT_ERROR_TEXT;
         this.toastService.showError(errMessage);
       }

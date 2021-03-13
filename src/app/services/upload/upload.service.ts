@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Application } from '@nativescript/core';
 import { TNSHttpFormDataParam } from 'nativescript-http-formdata';
-import { TNSHttpFormDataIos } from './http-form-data-android';
+import { TNSHttpFormDataIos } from './http-form-data-ios';
+import { TNSHttpFormDataAndroid } from './http-form-data-android';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { TNSHttpFormDataIos } from './http-form-data-android';
 export class UploadService {
 
   private formDataIos = new TNSHttpFormDataIos();
-  private formDataAndroid = new TNSHttpFormDataIos();
+  private formDataAndroid = new TNSHttpFormDataAndroid();
 
   constructor() {
   }
