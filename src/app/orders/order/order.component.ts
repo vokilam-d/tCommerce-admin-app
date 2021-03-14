@@ -9,7 +9,7 @@ import * as imagepicker from '@nativescript/imagepicker';
 import * as camera from '@nativescript/camera';
 import { ToastService } from '../../services/toast.service';
 import { MediaDto } from '../../shared/dtos/media.dto';
-import { Dialogs, ImageAsset, ImageSource } from '@nativescript/core';
+import { Dialogs, ImageAsset } from '@nativescript/core';
 
 
 @Component({
@@ -58,8 +58,8 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  getMediaUrl(media: MediaDto): string {
-    return UPLOADED_HOST + media.variantsUrls.original;
+  getMediaUrl(media: MediaDto, original: boolean): string {
+    return UPLOADED_HOST + (original ? media.variantsUrls.original : media.variantsUrls.small);
   }
 
   getItemUrl(url: string): string {
@@ -135,5 +135,10 @@ export class OrderComponent implements OnInit {
 
       this.zone.run(() => this.isUploading = false);
     });
+  }
+
+  openMediaModal(media: MediaDto) {
+    const url = this.getMediaUrl(media, true);
+    this.router.navigate(['/', 'photo'], { queryParams: { photoUrl: url }, clearHistory: false });
   }
 }

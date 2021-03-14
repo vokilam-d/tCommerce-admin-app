@@ -13,7 +13,8 @@
             <FlexboxLayout flexWrap="wrap" justifyContent="space-around" alignItems="flex-start">
                 <Image class="m-5 order__media"
                        *ngFor="let media of order.medias"
-                       [src]="getMediaUrl(media)"
+                       [src]="getMediaUrl(media, true)"
+                       (tap)="openMediaModal(media)"
                        stretch="aspectFill"
                 ></Image>
 

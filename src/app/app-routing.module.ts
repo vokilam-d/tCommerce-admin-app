@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 const routes: Routes = [
   { path: '', component: AppComponent },
   { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
+  { path: 'photo', loadChildren: () => import('./photo/photo.module').then(m => m.PhotoModule) },
   { path: 'orders', loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule) }
 ];
 
