@@ -49,7 +49,15 @@ export class TNSHttpFormDataAndroid extends Observable {
           onResponse: (call, response) => {
             let body;
             try {
-              body = JSON.parse(response.body().string());
+              body = response.body().string();
+              if (body) {
+                body = JSON.parse(body);
+              } else {
+                body = {
+                  statusCode: 500,
+                  message: 'NO_BODY'
+                };
+              }
             } catch (e) {
               body = response.body().string();
             }

@@ -17,6 +17,9 @@ export class ToastService {
   }
 
   private showToast(text: string, duration: ToastDuration, backgroundColor?: string) {
+    if (!text) {
+      text = 'NO_TEXT';
+    }
     const toast = new Toasty({ text, duration, backgroundColor });
     toast.show();
   }
