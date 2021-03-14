@@ -1,18 +1,18 @@
 <ActionBar title="Заказы"></ActionBar>
 
-<ScrollView orientation="horizontal">
-    <FlexboxLayout flexWrap="wrap" flexDirection="column" width="90%">
-        <FlexboxLayout class="container" flexGrow="1">
-            <StackLayout class="form">
+<ScrollView orientation="vertical">
+    <FlexboxLayout flexWrap="wrap" flexDirection="column">
+        <FlexboxLayout class="form" flexGrow="1" justifyContent="center" alignItems="center">
+            <StackLayout>
                 <Label class="label" text="Введите номер заказа"></Label>
                 <TextField class="input"
-                           hint="10123"
+                           hint="Например, 10123"
                            keyboardType="number"
                            [(ngModel)]="orderId"
                 ></TextField>
-
-                <Button class="btn" [text]="'Подтвердить'" (tap)="submit()"></Button>
             </StackLayout>
+
+            <Button class="btn" [text]="'Выбрать'" (tap)="submit()"></Button>
 
         </FlexboxLayout>
 
@@ -25,6 +25,33 @@
         ></ActivityIndicator>
 
         <TextView class="error" *ngIf="error" [text]="error" editable="false"></TextView>
+
+        <StackLayout class="m-t-10">
+            <FlexboxLayout class="m-0 p-l-5 p-r-5 order"
+                           *ngFor="let order of orders"
+                           (tap)="selectOrder(order)"
+                           alignItems="center"
+                           height="50"
+            >
+                <Label [text]="order.id"></Label>
+                <Label class="order__div"></Label>
+                <StackLayout>
+                    <Label class="m-0 p-0 text-center" [text]="order.createdAt | date:'dd.MM.y'"></Label>
+                    <Label class="m-0 p-0 text-center" [text]="order.createdAt | date:'HH:mm:ss'"></Label>
+                </StackLayout>
+                <Label class="order__div"></Label>
+                <StackLayout class="order__customer">
+                    <Label class="m-0 p-0 text-center" [text]="order.shipment.recipient.lastName"></Label>
+                    <Label class="m-0 p-0 text-center" [text]="order.shipment.recipient.phone"></Label>
+                </StackLayout>
+                <Label class="order__div"></Label>
+                <Label class="order__city" [text]="order.shipment.recipient.settlement" textWrap="true"></Label>
+                <Label class="order__div"></Label>
+                <Label class="order__note" [text]="order.adminNote" textWrap="true"></Label>
+                <Label class="order__div"></Label>
+                <Label class="order__status" [text]="order.statusDescription.ru" textWrap="true"></Label>
+            </FlexboxLayout>
+        </StackLayout>
 
         <Button class="logout-btn" dock="bottom" [text]="'Выйти из аккаунта'" (tap)="logout()"></Button>
     </FlexboxLayout>

@@ -34,11 +34,16 @@
 
             <StackLayout class="m-t-10 m-l-10 m-r-10">
                 <Label class="t-16"
-                       [text]="order.shipment.recipient.firstName + ' ' + order.shipment.recipient.lastName + ', ' + order.shipment.recipient.phone"
+                       [text]="order.shipment.recipient.firstName + ' ' + order.shipment.recipient.lastName + ', ' + order.shipment.recipient.phone + ', ' + order.shipment.recipient.settlement + ', ' + order.shipment.recipient.address"
                        textWrap="true"
                 ></Label>
                 <Label class="t-16"
-                       [text]="order.shipment.recipient.settlementFull || order.shipment.recipient.settlement + ', ' + order.shipment.recipient.addressFull || order.shipment.recipient.address"
+                       [text]="order.prices.totalCost + ' грн, ' + order.statusDescription.ru"
+                       textWrap="true"
+                ></Label>
+                <Label class="t-30 font-italic"
+                       *ngIf="order.adminNote"
+                       [text]="'Коммент: ' + order.adminNote"
                        textWrap="true"
                 ></Label>
             </StackLayout>

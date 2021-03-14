@@ -19,6 +19,10 @@ export class OrderService {
     private authService: AuthService
   ) { }
 
+  fetchOrders(): Observable<ResponseDto<OrderDto[]>> {
+    return this.http.get<ResponseDto<OrderDto[]>>(`${API_HOST}/api/v1/admin/orders`, { params: { limit: '60' } });
+  }
+
   fetchOrder(orderId: number): Observable<ResponseDto<OrderDto>> {
     return this.http.get<ResponseDto<OrderDto>>(`${API_HOST}/api/v1/admin/orders/${orderId}`);
   }

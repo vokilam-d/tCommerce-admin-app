@@ -4,6 +4,8 @@ import { RouterExtensions } from '@nativescript/angular';
 import { finalize } from 'rxjs/internal/operators';
 import { AuthService } from '../services/auth.service';
 import { DEFAULT_ERROR_TEXT } from '../shared/constants';
+import { OrderService } from '../services/order.service';
+import { OrderDto } from '../shared/dtos/order.dto';
 
 @Component({
   selector: 'Orders',
@@ -12,6 +14,8 @@ import { DEFAULT_ERROR_TEXT } from '../shared/constants';
 })
 export class OrdersComponent implements OnInit {
 
+  orders: OrderDto[];
+
   error: string = null;
   orderId: number;
   isLoading: boolean = false;
@@ -19,6 +23,7 @@ export class OrdersComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private orderService: OrderService,
     private router: RouterExtensions
   ) { }
 
@@ -27,6 +32,8 @@ export class OrdersComponent implements OnInit {
     if (lastOrderId) {
       this.orderId = lastOrderId;
     }
+
+    this.fetchOrders();
   }
 
   submit(): void {
@@ -49,5 +56,25 @@ export class OrdersComponent implements OnInit {
           this.error = (error.error && error.error.message) || JSON.stringify(error.error || error) || DEFAULT_ERROR_TEXT;
         }
       );
+  }
+
+  private fetchOrders() {
+    this.error = null;
+    this.isLoading = true;
+    this.orderService.fetchOrders()
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(
+        response => {
+          this.orders = response.data;
+        },
+        error => {
+          this.error = (error.error && error.error.message) || JSON.stringify(error.error || error) || DEFAULT_ERROR_TEXT;
+        }
+      );
+  }
+
+  selectOrder(order: OrderDto) {
+    this.orderId = order.id;
+    this.submit();
   }
 }
