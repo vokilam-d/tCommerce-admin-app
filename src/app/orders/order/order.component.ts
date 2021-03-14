@@ -10,6 +10,7 @@ import * as camera from '@nativescript/camera';
 import { ToastService } from '../../services/toast.service';
 import { MediaDto } from '../../shared/dtos/media.dto';
 import { Dialogs, ImageAsset } from '@nativescript/core';
+import { OrderItemDto } from '../../shared/dtos/order-item.dto';
 
 
 @Component({
@@ -62,8 +63,8 @@ export class OrderComponent implements OnInit {
     return UPLOADED_HOST + (original ? media.variantsUrls.original : media.variantsUrls.small);
   }
 
-  getItemUrl(url: string): string {
-    return UPLOADED_HOST + url;
+  getItemUrl(item: OrderItemDto): string {
+    return UPLOADED_HOST + item.imageUrl;
   }
 
   private fetchOrder() {
@@ -137,8 +138,17 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  openMediaModal(media: MediaDto) {
+  openPhotoModalForMedia(media: MediaDto) {
     const url = this.getMediaUrl(media, true);
-    this.router.navigate(['/', 'photo'], { queryParams: { photoUrl: url }, clearHistory: false });
+    this.openPhotoModal(url);
+  }
+
+  openPhotoModalForOrderItem(item: OrderItemDto) {
+    const url = this.getItemUrl(item);
+    this.openPhotoModal(url);
+  }
+
+  private openPhotoModal(photoUrl: string) {
+    this.router.navigate(['/', 'photo'], { queryParams: { photoUrl }, clearHistory: false });
   }
 }

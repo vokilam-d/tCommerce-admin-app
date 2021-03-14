@@ -14,7 +14,7 @@
                 <Image class="m-5 order__media"
                        *ngFor="let media of order.medias"
                        [src]="getMediaUrl(media, true)"
-                       (tap)="openMediaModal(media)"
+                       (tap)="openPhotoModalForMedia(media)"
                        stretch="aspectFill"
                 ></Image>
 
@@ -33,19 +33,34 @@
             </FlexboxLayout>
 
             <StackLayout class="m-t-10 m-l-10 m-r-10">
-                <Label class="t-16" [text]="order.shipment.recipient.firstName + ' ' + order.shipment.recipient.lastName + ', ' + order.shipment.recipient.phone" textWrap="true"></Label>
-                <Label class="t-16" [text]="order.shipment.recipient.settlementFull || order.shipment.recipient.settlement + ', ' + order.shipment.recipient.addressFull || order.shipment.recipient.address" textWrap="true"></Label>
+                <Label class="t-16"
+                       [text]="order.shipment.recipient.firstName + ' ' + order.shipment.recipient.lastName + ', ' + order.shipment.recipient.phone"
+                       textWrap="true"
+                ></Label>
+                <Label class="t-16"
+                       [text]="order.shipment.recipient.settlementFull || order.shipment.recipient.settlement + ', ' + order.shipment.recipient.addressFull || order.shipment.recipient.address"
+                       textWrap="true"
+                ></Label>
             </StackLayout>
 
             <Label class="m-t-10 m-l-10 m-r-10 t-20" text="Товары в заказе"></Label>
 
-            <GridLayout class="m-t-10 p-l-10 p-r-10" columns="100, *, 30" rows="100, 100, 100, 100">
-                <ng-container *ngFor="let item of order.items, index as i">
-                    <Image [src]="getItemUrl(item.imageUrl)" [row]="i" col="0"></Image>
-                    <Label class="m-l-5 m-r-5 t-16" [text]="item.name[lang]" [row]="i" col="1" textWrap="true"></Label>
-                    <Label class="t-30 font-weight-bold" [text]="item.qty" [row]="i" col="2"></Label>
-                </ng-container>
-            </GridLayout>
+            <StackLayout>
+                <GridLayout class="m-t-10 p-l-10 p-r-10"
+                            *ngFor="let item of order.items"
+                            columns="100, *, 30"
+                            height="80"
+                >
+                    <Image [src]="getItemUrl(item)"
+                           (tap)="openPhotoModalForOrderItem(item)"
+                           height="80"
+                           row="0"
+                           col="0"
+                    ></Image>
+                    <Label class="m-l-5 m-r-5 t-16" [text]="item.name[lang]" row="0" col="1" textWrap="true"></Label>
+                    <Label class="t-30 font-weight-bold" [text]="item.qty" row="0" col="2"></Label>
+                </GridLayout>
+            </StackLayout>
         </ng-container>
     </StackLayout>
 </ScrollView>

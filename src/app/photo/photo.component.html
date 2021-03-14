@@ -1,5 +1,12 @@
 <ActionBar [title]="'Фото'"></ActionBar>
 
+<ActivityIndicator *ngIf="photoUrl"
+                   [busy]="true"
+                   row="4"
+                   horizontalAlignment="center"
+                   verticalAlignment="center"
+></ActivityIndicator>
+
 <Image class="m-5"
        *ngIf="photoUrl"
        [src]="photoUrl"
