@@ -76,7 +76,7 @@ export class OrderComponent implements OnInit {
           this.order = response.data;
         },
         error => {
-          const errMessage = error.message || error.error?.message || error.error || error || DEFAULT_ERROR_TEXT;
+          const errMessage = error.message || error.error?.message || error.error || (typeof error === 'string' && error) || DEFAULT_ERROR_TEXT;
           this.toastService.showError(errMessage);
         }
       );
@@ -130,7 +130,7 @@ export class OrderComponent implements OnInit {
         this.zone.run(() => this.order.medias = response.data.medias);
         this.toastService.showMessage('Фото успешно загружено');
       } catch (error) {
-        const errMessage = error.message || error.error?.message || error.error || error || DEFAULT_ERROR_TEXT;
+        const errMessage = error.message || error.error?.message || error.error || (typeof error === 'string' && error) || DEFAULT_ERROR_TEXT;
         this.toastService.showError(errMessage);
       }
 
