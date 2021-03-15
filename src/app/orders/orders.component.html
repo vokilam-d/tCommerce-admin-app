@@ -36,8 +36,8 @@
                 <Label class="order__id" [text]="order.id" flexShrink="0"></Label>
                 <Label class="order__div"></Label>
                 <StackLayout>
-                    <Label class="m-0 p-0 text-center" [text]="order.createdAt | date:'dd.MM.y'"></Label>
-                    <Label class="m-0 p-0 text-center" [text]="order.createdAt | date:'HH:mm:ss'"></Label>
+                    <Label class="m-0 p-0 text-center" [text]="order.createdAt | date:'dd.MM'"></Label>
+                    <Label class="m-0 p-0 text-center" [text]="order.createdAt | date:'HH:mm'"></Label>
                 </StackLayout>
                 <Label class="order__div"></Label>
                 <StackLayout class="order__customer">
