@@ -45,6 +45,10 @@
     border-color: rgba(49, 49, 49, 0.1);
 }
 
+.order__id {
+    width: 35;
+}
+
 .order__customer {
     width: 80;
 }

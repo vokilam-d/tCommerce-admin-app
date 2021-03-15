@@ -33,7 +33,7 @@
                            alignItems="center"
                            height="50"
             >
-                <Label [text]="order.id"></Label>
+                <Label class="order__id" [text]="order.id" flexShrink="0"></Label>
                 <Label class="order__div"></Label>
                 <StackLayout>
                     <Label class="m-0 p-0 text-center" [text]="order.createdAt | date:'dd.MM.y'"></Label>
