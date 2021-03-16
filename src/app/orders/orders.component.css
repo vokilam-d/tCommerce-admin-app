@@ -46,18 +46,14 @@
 }
 
 .order__id {
-    width: 35;
+    width: 40;
 }
 
 .order__customer {
-    width: 80;
+    width: 60;
 }
 
 .order__city {
-    width: 50;
-}
-
-.order__note {
     width: 50;
 }
 
