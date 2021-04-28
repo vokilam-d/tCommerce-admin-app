@@ -41,10 +41,10 @@
                 </StackLayout>
                 <Label class="order__div"></Label>
                 <StackLayout class="order__customer">
-                    <Label class="m-0 p-0 text-center" [text]="order.shipment.recipient.lastName"></Label>
+                    <Label class="m-0 p-0 text-center" [text]="order.shipment.recipient.contactInfo.lastName"></Label>
                 </StackLayout>
                 <Label class="order__div"></Label>
-                <Label class="order__city" [text]="order.shipment.recipient.settlement" textWrap="true"></Label>
+                <Label class="order__city" [text]="order.shipment.recipient.address.settlementName" textWrap="true"></Label>
                 <Label class="order__div"></Label>
                 <Label class="order__status" [text]="order.statusDescription.ru" textWrap="true"></Label>
             </FlexboxLayout>
